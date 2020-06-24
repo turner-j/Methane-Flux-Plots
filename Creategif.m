@@ -58,23 +58,33 @@ end
 close;
 %%
 filename = 'testAnimated.gif'; % Specify the output file name
-for starting = 1:(repetitions-1)
-    newCH4 = CH4((1+(starting*144)):(144*(1+starting)));
-    newWD = WD((1+(starting*144)):(144*(1+starting)));
-    newWS = WS((1+(starting*144)):(144*(1+starting)));
-    if (sum(isnan(newWD))>130)||(sum(isnan(newWS))>130)
-        continue
-    end
-    [A,map] = rgb2ind(im{starting},256);
-    if starting == 1
-        if (sum(isnan(newWD))>130)||(sum(isnan(newWS))>130)
-            continue
-        end
+% for starting = 1:(repetitions-1)
+%     newCH4 = CH4((1+(starting*144)):(144*(1+starting)));
+%     newWD = WD((1+(starting*144)):(144*(1+starting)));
+%     newWS = WS((1+(starting*144)):(144*(1+starting)));
+%     if (sum(isnan(newWD))>130)||(sum(isnan(newWS))>130)
+%         continue
+%     end
+%     [A,map] = rgb2ind(im{starting},256);
+%     if starting == 1
+%         if (sum(isnan(newWD))>130)||(sum(isnan(newWS))>130)
+%             continue
+%         end
+%         imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.2);
+%     else
+%         if (sum(isnan(newWD))>130)||(sum(isnan(newWS))>130)
+%             continue
+%         end
+%         imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.2);
+%     end
+% end
+series = find(~cellfun(@isempty,im));
+
+for i = series
+    [A,map] = rgb2ind(im{i},256);
+    if i == series(1)
         imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.2);
     else
-        if (sum(isnan(newWD))>130)||(sum(isnan(newWS))>130)
-            continue
-        end
         imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.2);
     end
-end
+end   
