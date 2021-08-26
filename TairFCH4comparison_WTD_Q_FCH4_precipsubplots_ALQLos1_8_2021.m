@@ -58,17 +58,25 @@ dailyNEEALQ = dailyNEEALQ(:,1);
 dailyTaALQ = dailyaverage2(USALQ.TA_F);
 dailyTaALQ = dailyTaALQ(:,1);
 
+nanmean(dailyTaALQ(year(dates)==2019))
+
 daily_RgALQ = dailyaverage2(USALQ.SW_IN);
 dailyRgALQ = daily_RgALQ(:,1);
 
 daily_VPDALQ = dailyaverage2(USALQ.VPD);
 dailyVPDALQ = daily_VPDALQ(:,1);
+%%
+figure()
+plot(dates,dailyNEEALQ)
+nansum(dailyNEEALQ(year(dates)==2019))
 %% Index for the same dates
 precip = woodruffprecipS3.Precipitationin*2.54;
 
 Losdischarge = USGSLos.discharge_cfs*0.028316847;% Convert USLos discharge from cfs to m3s (site no 5357335)
+nanmean(Losdischarge(year(USGSLos.datetime)==2020))
 
 ALQdischarge = USGSALQ.discharge_cfs*0.028316847;% Convert USALQ discharge from cfs to m3s-1 (site no 5357205)
+nanmean(ALQdischarge(year(USGSALQ.datetime)==2019))
 %% Plotting
 fig = figure();
 right_color = [0.6510    0.6510    0.6510];
@@ -84,6 +92,9 @@ plot(datesLos,dailyWTDLos,'-','LineWidth',2)
 ylabel('WTD (m)')
 set(gca,'FontSize',17)
 xlim([dates(1) dates(end)])
+
+nanmean(dailyWTDLos(ismember(year(datesLos),2019)))
+nanmean(dailyWTDLos(ismember(year(datesLos),2020)))
 
 left_color = [0.3020 0.7451 0.9333];
 right_color = [0.8784    0.4588    0.7176];
@@ -102,6 +113,12 @@ xlim([dates(1) dates(end)])
 set(gca,'FontSize',17)
 legend('US-Los','US-ALQ','Location','Northwest');
 
+nanmean(Losdischarge(ismember(year(dates),2019)))
+nanmean(Losdischarge(ismember(year(dates),2020)))
+
+nanmean(ALQdischarge(ismember(year(dates),2019)))
+nanmean(ALQdischarge(ismember(year(dates),2020)))
+
 right_color = [0.9294    0.2235    0.5059];
 left_color = [0 0 0];
 set(fig,'defaultAxesColorOrder',[left_color; right_color]);
@@ -118,7 +135,7 @@ box on
 set(gca,'FontSize',17)
 yyaxis right
 plot(dates,USGSALQ.Twater_mean,'-','Color',[0.9294    0.2235    0.5059],'LineWidth',2)
-ylabel('T_{water} (^{\circ}C)')
+ylabel('T_{stream} (^{\circ}C)')
 lgnd = legend('US-ALQ','US-Los','US-ALQ','Location','Northwest','NumColumns',2)
 set(lgnd,'color','none');
 
@@ -148,6 +165,12 @@ lgnd = legend('US-Los','US-Los 2014-18','US-ALQ','Location','Northwest');
 box on
 set(gca,'FontSize',17)
 set(lgnd,'color','none');
+
+nanmean(dailyCH4Los(ismember(year(datesLos),2019)))
+nanmean(dailyCH4Los(ismember(year(datesLos),2020)))
+
+nanmean(dailyFCH4(ismember(year(datesLos),2019)))
+nanmean(dailyFCH4(ismember(year(datesLos),2020)))
 %% Statistics
 nanvar(USLos.WTD(year(USLos.TIMESTAMP_END)==2019))
 nanvar(USLos.WTD(year(USLos.TIMESTAMP_END)==2020))
@@ -191,3 +214,52 @@ max(gramconvertnmolday(dailyCH4Los))
 max(gramconvertnmolday(dailyFCH4))
 min(gramconvertnmolday(dailyCH4Los))
 min(gramconvertnmolday(dailyFCH4))
+%% Cumulative FCH4 and NEE 2019
+dailyCH4Los19 = dailyCH4Los(year(datesLos)==2019);
+cumulativeCH4Los = cumsum(dailyCH4Los19(:,1),'omitnan');
+cumulativegC_CH4Los = gramconvertnmolday(cumulativeCH4Los);
+stderrorlos = std(cumulativegC_CH4Los)/sqrt(length(cumulativegC_CH4Los))
+cumulativegC_CH4Los = gramconvertnmolday(cumulativeCH4Los(end))
+
+dailyFCH419 = dailyFCH4(year(dates)==2019);
+cumulativeCH4ALQ = cumsum(dailyFCH419(:,1),'omitnan');
+cumulativegC_CH4ALQ = gramconvertnmolday(cumulativeCH4ALQ);
+stderroralq = std(cumulativegC_CH4ALQ)/sqrt(length(cumulativegC_CH4ALQ))
+cumulativegC_CH4ALQ = gramconvertnmolday(cumulativeCH4ALQ(end)) 
+
+dailyNEELos19 = dailyNEELos(year(datesLos)==2019);
+cumulativeNEELos = cumsum(dailyNEELos19(:,1),'omitnan');
+cumulativegC_NEELos = gramconvertday(cumulativeNEELos);
+stderrorlos = std(cumulativegC_NEELos)/sqrt(length(cumulativegC_NEELos))
+cumulativegC_NEELos = gramconvertday(cumulativeNEELos(end))
+
+dailyNEEALQ19 = dailyNEEALQ(year(dates)==2019);
+cumulativeNEEALQ = cumsum(dailyNEEALQ19(:,1),'omitnan');
+cumulativegC_NEEALQ = gramconvertday(cumulativeNEEALQ);
+stderroralq = std(cumulativegC_NEEALQ)/sqrt(length(cumulativegC_NEEALQ))
+cumulativegC_NEEALQ = gramconvertday(cumulativeNEEALQ(end))
+
+%% Cumulative FCH4 and NEE 2020
+dailyCH4Los20 = dailyCH4Los(year(datesLos)==2020);
+cumulativeCH4Los = cumsum(dailyCH4Los20(:,1),'omitnan');
+cumulativegC_CH4Los = gramconvertnmolday(cumulativeCH4Los);
+stderrorlos = std(cumulativegC_CH4Los)/sqrt(length(cumulativegC_CH4Los))
+cumulativegC_CH4Los = gramconvertnmolday(cumulativeCH4Los(end))
+
+dailyFCH420 = dailyFCH4(year(dates)==2020);
+cumulativeCH4ALQ = cumsum(dailyFCH420(:,1),'omitnan');
+cumulativegC_CH4ALQ = gramconvertnmolday(cumulativeCH4ALQ);
+stderroralq = std(cumulativegC_CH4ALQ)/sqrt(length(cumulativegC_CH4ALQ))
+cumulativegC_CH4ALQ = gramconvertnmolday(cumulativeCH4ALQ(end)) 
+
+dailyNEELos20 = dailyNEELos(year(datesLos)==2020);
+cumulativeNEELos = cumsum(dailyNEELos20(:,1),'omitnan');
+cumulativegC_NEELos = gramconvertday(cumulativeNEELos);
+stderrorlos = std(cumulativegC_NEELos)/sqrt(length(cumulativegC_NEELos))
+cumulativegC_NEELos = gramconvertday(cumulativeNEELos(end))
+
+dailyNEEALQ20 = dailyNEEALQ(year(dates)==2020);
+cumulativeNEEALQ = cumsum(dailyNEEALQ20(:,1),'omitnan');
+cumulativegC_NEEALQ = gramconvertday(cumulativeNEEALQ);
+stderroralq = std(cumulativegC_NEEALQ)/sqrt(length(cumulativegC_NEEALQ))
+cumulativegC_NEEALQ = gramconvertday(cumulativeNEEALQ(end))

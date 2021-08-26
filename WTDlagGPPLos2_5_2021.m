@@ -125,18 +125,26 @@ lag2 = 1:200;
 figure()
 subplot(1,2,1)
 hold on
-plot(lag2,rho3,'o','MarkerEdgeColor','k')
-plot(lag2(pval3<0.05 & rho3>0),rho3(pval3<0.05 & rho3>0),'o','MarkerFaceColor',[0.3020 0.7451 0.9333],'MarkerEdgeColor','k');
+plot(lag2,rho3,'o','MarkerEdgeColor','k','MarkerSize',11)
+plot(lag2(pval3<0.05 & rho3>0),rho3(pval3<0.05 & rho3>0),'o','MarkerFaceColor','b','MarkerEdgeColor','k','MarkerSize',11);
 hold off
-xlabel('lag (days)')
-ylabel('corr. coeff.')
-title('Lag Corr of WTD & GPP US-Los 2019')
+xlabel('time lag (days)')
+ylabel('correlation coefficient')
+% title('Lag Corr of WTD & GPP US-Los 2019')
+title('US-Los 2019')
+set(gca,'FontSize',17)
+ylim([0 1])
+xlim([0 200])
 
 subplot(1,2,2)
 hold on
-plot(lag2,rho,'o','MarkerEdgeColor','k')
-plot(lag2(pval<0.05 & rho>0),rho(pval<0.05 & rho>0),'o','MarkerFaceColor',[0.3020 0.7451 0.9333],'MarkerEdgeColor','k');
+plot(lag2,rho,'o','MarkerEdgeColor','k','MarkerSize',11)
+plot(lag2(pval<0.05 & rho>0),rho(pval<0.05 & rho>0),'o','MarkerFaceColor','b','MarkerEdgeColor','k','MarkerSize',11);
 hold off
-xlabel('lag (days)')
-ylabel('corr. coeff.')
-title('Lag Corr of WTD & GPP US-Los 2020')
+xlabel('time lag (days)')
+ylabel('correlation coefficient')
+% title('Lag Corr of WTD & GPP US-Los 2020')
+title('US-Los 2020')
+set(gca,'FontSize',17)
+ylim([0 1])
+xlim([0 200])

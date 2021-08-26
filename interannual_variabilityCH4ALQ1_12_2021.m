@@ -69,12 +69,18 @@ hold on
 plot(T,beta(1).*exp(beta(2).*T),'-','Color',[ 0.4902    0.2588    0.4000],'LineWidth',3)% exponential fit
 hold off
 ylabel('FCH_4 [\etamol m^{-2} s^{-1}]')
-title(['Discharge and T_{air} versus FCH_4 US-ALQ 2019-2020'])% make sure this is the right year or manually insert both years
+% title(['Discharge and T_{air} versus FCH_4 US-ALQ 2019-2020'])% make sure this is the right year or manually insert both years
 xlim([-5 25])
 xlabel('T_{air} {\circ}(C)')% Daily average air temp
 formatSpec = '%.2f';
 text(-3,30,[{'R^2 = '} num2str(R2T,formatSpec)],'FontSize',17)
 set(gca,'FontSize',17)
+xl = xlim;
+yl = ylim;
+xt = 0.05 * (xl(2)-xl(1)) + xl(1)
+yt = 0.90 * (yl(2)-yl(1)) + yl(1)
+caption = sprintf('y = %.2f*exp(%.2f*x)', beta(1), beta(2));
+text(xt, yt, caption, 'FontSize', 16, 'Color', 'k');
 
 x= linspace(0,.5);
 
@@ -96,13 +102,20 @@ SSEb = sum((Fn19(unique(Y))-Fb).^2);% sum of squared estimate of errors
 SSTb = sum((Fn19(unique(Y))-nanmean(Fn19(unique(Y)))).^2);% total sum of squares
 R2Tb = 1-SSEb./SSTb;% R-squared
 formatSpec = '%.2f';
-text(0.1,1.5,[{'R^2 = '} num2str(R2Tb,formatSpec)],'FontSize',17)
+text(0.05,0.5,[{'R^2 = '} num2str(R2Tb,formatSpec)],'FontSize',17)
 set(gca,'FontSize',17)
 xlim([0.0 0.5])
-title('2019')
+% title('2019')
 [R,P] = corrcoef(polyval(p,unique(Y)/100),Fn19(unique(Y)))
 R2 = (R).^2
 ylim([-0.5 2])
+
+xl = xlim;
+yl = ylim;
+xt = 0.05 * (xl(2)-xl(1)) + xl(1)
+yt = 0.90 * (yl(2)-yl(1)) + yl(1)
+caption = sprintf('y = %.2f*x + %.2f',p(1),p(2));
+text(xt, yt, caption, 'FontSize', 16, 'Color', 'k');
 
 subplot(2,2,4)
 % make sure not to include NaNs in polyfit
@@ -112,22 +125,25 @@ Y = Y(~isnan(dailyCH4(yr2==2020)));
 Fn20 = Fn(year(modeldates)==2020);
 Fn20 = accumarray(Y(~isnan(Y)),Fn(~isnan(Y)),[],@nanmean);
 plot(unique(Y(~isnan(Y)))/100,Fn20(unique(Y(~isnan(Y)))),'o','MarkerFaceColor',[0.8784    0.4588    0.7176],'MarkerEdgeColor',[0.8784    0.4588    0.7176])
-p=polyfit(unique(Y(~isnan(Y)))/100,Fn20(unique(Y(~isnan(Y)))),1);
-f = polyval(p,x); 
+% p=polyfit(unique(Y(~isnan(Y)))/100,Fn20(unique(Y(~isnan(Y)))),1);
+% f = polyval(p,x); 
 % plot(x,f,'-','Color',[0.0980    0.3176    0.4118],'LineWidth',3)% Linear fit
 hold off
 xlim([0.0 0.5])
 newdis = unique(Y(~isnan(Y)))/100;
-Fb = polyval(p,newdis); 
-SSEb = sum((Fn20(unique(Y(~isnan(Y))))-Fb).^2);% sum of squared estimate of errors
-SSTb = sum((Fn20(unique(Y(~isnan(Y))))-nanmean(Fn20(unique(Y(~isnan(Y)))))).^2);% total sum of squares
-R2Tb = 1-SSEb./SSTb;% R-squared
-[R,P] = corrcoef(polyval(p,unique(Y(~isnan(Y)))/100),Fn20(unique(Y(~isnan(Y)))))
-formatSpec = '%.2f';
+% Fb = polyval(p,newdis); 
+% SSEb = sum((Fn20(unique(Y(~isnan(Y))))-Fb).^2);% sum of squared estimate of errors
+% SSTb = sum((Fn20(unique(Y(~isnan(Y))))-nanmean(Fn20(unique(Y(~isnan(Y)))))).^2);% total sum of squares
+% R2Tb = 1-SSEb./SSTb;% R-squared
+% [R,P] = corrcoef(polyval(p,unique(Y(~isnan(Y)))/100),Fn20(unique(Y(~isnan(Y)))))
+% formatSpec = '%.2f';
 % text(0.5,0.5,[{'R^2 = '} num2str(R2Tb,formatSpec)],'FontSize',17)
 set(gca,'FontSize',17)
-title('2020')
+% title('2020')
 ylim([-0.5 2])
+xlabel('Discharge (^{m^3}/_{s})')
+ylabel('T_{air} FCH_4')
+
 %%
 % figure()
 % 
@@ -321,9 +337,9 @@ hold on
 plot(ALQ2019lag',ALQ2019lagcorr','--','Color',[0.8784    0.4588    0.7176],'LineWidth',2)% original
 plot(w',v','-','Color',[ 0.4902    0.2588    0.4000],'LineWidth',2)% normalized
 hold off
-xlabel('time lag, days')
+xlabel('time lag (days)')
 ylabel('correlation coefficient')
-title('GPP lag influence FCH_4 ALQ 2019')
+% title('GPP lag influence FCH_4 ALQ 2019')
 ylim([0.1 1])
 set(gca,'FontSize',17)
 
@@ -332,11 +348,12 @@ hold on
 plot(ALQ2020lag',ALQ2020lagcorr','--','Color',[0.8784    0.4588    0.7176],'LineWidth',2)% original
 plot(w2',v2','-','Color',[ 0.4902    0.2588    0.4000],'LineWidth',2)% normalized
 hold off
-title('GPP lag influence FCH_4 ALQ 2020')
+% title('GPP lag influence FCH_4 ALQ 2020')
 legend('original','normalized')
 set(gca,'FontSize',17)
 ylim([0.1 1])
-
+xlabel('time lag (days)')
+ylabel('correlation coefficient')
 %% Water temperature
 figure()
 subplot(1,2,1)
@@ -350,12 +367,13 @@ yFit = polyval(coefficients,xFit);
 plot(xFit,yFit,'-','Color',[ 0.4902    0.2588    0.4000],'LineWidth',2);
 [R,P] = corrcoef(x,y,'Rows','complete')
 hold off
-xlabel('T_{water} (^{\circ} C)')
+xlabel('T_{stream} (^{\circ} C)')
 ylabel('T_{air}-FCH_4')
-title('T_{water} vs. T_{air}-FCH_4 US-ALQ Apr-Oct')
+% title('T_{water} vs. T_{air}-FCH_4 US-ALQ Apr-Oct')
 xlim([0 25])
 ylim([-0.5 4.5])
 set(gca,'FontSize',17)
+title('US-ALQ')
 
 subplot(1,2,2)
 hold on
@@ -368,8 +386,10 @@ yFit = polyval(coefficients,xFit);
 plot(xFit,yFit,'-','Color',[ 0.4902    0.2588    0.4000],'LineWidth',2);
 [R,P] = corrcoef(x,y,'Rows','complete')
 hold off
-title('T_{water} vs. T_{air}-FCH_4 US-ALQ, Not Apr-Oct')
+% title('T_{water} vs. T_{air}-FCH_4 US-ALQ, Not Apr-Oct')
 xlim([0 5])
 ylim([-0.5 4.5])
 set(gca,'FontSize',17)
-
+xlabel('T_{stream} (^{\circ} C)')
+ylabel('T_{air}-FCH_4')
+title('US-ALQ')

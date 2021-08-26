@@ -77,12 +77,18 @@ hold on
 plot(T,beta(1).*exp(beta(2).*T),'-','Color',[0.0980    0.3176    0.4118],'LineWidth',3)% exponential fit
 hold off
 ylabel('FCH_4 [\etamol m^{-2} s^{-1}]')
-title(['Discharge and T_{air} versus FCH_4 US-Los 2019-2020'])% make sure this is the right year or manually insert both years
+% title(['Discharge and T_{air} versus FCH_4 US-Los 2019-2020'])% make sure this is the right year or manually insert both years
 xlim([-5 25])
 xlabel('T_{air} {\circ}(C)')% Daily average air temp
 formatSpec = '%.2f';
-text(-3,30,[{'R^2 = '} num2str(R2T,formatSpec)],'FontSize',17)
+text(-3,-20,[{'R^2 = '} num2str(R2T,formatSpec)],'FontSize',17)
 set(gca,'FontSize',17)
+xl = xlim;
+yl = ylim;
+xt = 0.05 * (xl(2)-xl(1)) + xl(1)
+yt = 0.90 * (yl(2)-yl(1)) + yl(1)
+caption = sprintf('y = %.2f*exp(%.2f*x)', beta(1), beta(2));
+text(xt, yt, caption, 'FontSize', 16, 'Color', 'k');
 
 x= linspace(0,10);
 
@@ -108,7 +114,7 @@ formatSpec = '%.2f';
 % text(0.5,4,[{'R^2 = '} num2str(R2Tb,formatSpec)],'FontSize',17)
 set(gca,'FontSize',17)
 ylim([-4 6])
-title('2019')
+% title('2019')
 [R,P] = corrcoef(polyval(p,unique(Y)/10),Fn19(unique(Y)))
 R2 = (R).^2
 
@@ -133,9 +139,17 @@ SSTb = sum((Fn20(unique(Y(~isnan(Y))))-nanmean(Fn20(unique(Y(~isnan(Y)))))).^2);
 R2Tb = 1-SSEb./SSTb;% R-squared
 [R,P] = corrcoef(polyval(p,unique(Y(~isnan(Y)))/10),Fn20(unique(Y(~isnan(Y)))))
 formatSpec = '%.2f';
-text(0.5,4,[{'R^2 = '} num2str(R2Tb,formatSpec)],'FontSize',17)
+text(0.5,-2,[{'R^2 = '} num2str(R2Tb,formatSpec)],'FontSize',17)
 set(gca,'FontSize',17)
-title('2020')
+xlabel('Discharge (^{m^3}/_{s})')
+ylabel('T_{air} FCH_4')
+xl = xlim;
+yl = ylim;
+xt = 0.05 * (xl(2)-xl(1)) + xl(1)
+yt = 0.90 * (yl(2)-yl(1)) + yl(1)
+caption = sprintf('y = %.2f*x + %.2f',p(1),p(2));
+text(xt, yt, caption, 'FontSize', 16, 'Color', 'k');
+% title('2020')
 
 %% Lag Analysis
 Z = [];
@@ -316,9 +330,9 @@ hold on
 plot(Los2019lag',Los2019lagcorr','--','Color',[0.3020 0.7451 0.9333],'LineWidth',2)% original
 plot(w',v','-','Color',[0.0980    0.3176    0.4118],'LineWidth',2)% normalized
 hold off
-xlabel('time lag, days')
+xlabel('time lag (days)')
 ylabel('correlation coefficient')
-title('GPP lag influence FCH_4 Los 2019')
+% title('GPP lag influence FCH_4 Los 2019')
 ylim([0.1 1])
 set(gca,'FontSize',17)
 
@@ -327,24 +341,26 @@ hold on
 plot(Los2020lag',Los2020lagcorr','--','Color',[0.3020 0.7451 0.9333],'LineWidth',2)% original
 plot(w2',v2','-','Color',[0.0980    0.3176    0.4118],'LineWidth',2)% normalized
 hold off
-title('GPP lag influence FCH_4 Los 2020')
+% title('GPP lag influence FCH_4 Los 2020')
+xlabel('time lag (days)')
+ylabel('correlation coefficient')
 legend('original','normalized')
 set(gca,'FontSize',17)
 ylim([0.1 1])
 %%
-figure()
-[c,lags] = xcorr(dailyGPP19,dailyCH419,70);
-stem(lags,c)
-xlabel('time lag, days')  
-ylabel('correlation')
-title('Lag corr. of GPP, CH_4 residuals')
-
-figure()
-[c,lags] = xcorr(dailyGPP19,Fn19,70);
-stem(lags,c)
-xlabel('time lag, days')  
-ylabel('correlation')
-title('Lag corr. of GPP, CH_4 residuals')
+% figure()
+% [c,lags] = xcorr(dailyGPP19,dailyCH419,70);
+% stem(lags,c)
+% xlabel('time lag, days')  
+% ylabel('correlation')
+% title('Lag corr. of GPP, CH_4 residuals')
+% 
+% figure()
+% [c,lags] = xcorr(dailyGPP19,Fn19,70);
+% stem(lags,c)
+% xlabel('time lag, days')  
+% ylabel('correlation')
+% title('Lag corr. of GPP, CH_4 residuals')
 
 %% Lag Analysis of WTD and FCH4
 Z = [];
@@ -470,9 +486,9 @@ hold on
 plot(lag,rho,'o','MarkerEdgeColor','k','MarkerSize',11)
 plot(lag(pval<0.05 & rho>0),rho(pval<0.05 & rho>0),'o','MarkerSize',11,'MarkerFaceColor',[0.3020 0.7451 0.9333],'MarkerEdgeColor','k');
 hold off
-xlabel('lag (days)')
-ylabel('corr. coeff.')
-title('Lag Corr of WTD & FCH_4 US-Los 2019')
+xlabel('time lag (days)')
+ylabel('correlation coefficient')
+% title('Lag Corr of WTD & FCH_4 US-Los 2019')
 set(gca,'FontSize',17)
 ylim([0 0.3])
 xlim([0 100])
@@ -482,9 +498,9 @@ hold on
 plot(lag,rho2,'o','MarkerEdgeColor','k','MarkerSize',11)
 plot(lag(pval2<0.05 & rho2>0),rho2(pval2<0.05 & rho2>0),'o','MarkerSize',11,'MarkerFaceColor',[0.3020 0.7451 0.9333],'MarkerEdgeColor','k');
 hold off
-xlabel('lag (days)')
-ylabel('corr. coeff.')
-title('Lag Corr of WTD & T_{air}-FCH_4 US-Los 2019')
+xlabel('time lag (days)')
+ylabel('correlation coefficient')
+% title('Lag Corr of WTD & T_{air}-FCH_4 US-Los 2019')
 set(gca,'FontSize',17)
 ylim([0 0.3])
 xlim([0 100])
