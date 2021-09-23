@@ -96,22 +96,13 @@ xlim([dates(1) dates(end)])
 nanmean(dailyWTDLos(ismember(year(datesLos),2019)))
 nanmean(dailyWTDLos(ismember(year(datesLos),2020)))
 
-% left_color = [0.3020 0.7451 0.9333];
-right_color = [0.8784    0.4588    0.7176];
-% set(fig,'defaultAxesColorOrder',[left_color; right_color]);
-
 subplot(5,1,2)
-% yyaxis left
-% US-Los
-% plot(dates,Losdischarge,'^')
-% ylabel('Q (m^3s^{-1})')
-yyaxis right
 % US-ALQ
-plot(dates,ALQdischarge,'o')
+plot(dates,ALQdischarge,'o','MarkerEdgeColor',[0.8784    0.4588    0.7176])
 ylabel('Q (m^3s^{-1})')
 xlim([dates(1) dates(end)])
 set(gca,'FontSize',17)
-legend('US-Los','US-ALQ','Location','Northwest');
+legend('US-ALQ','Location','Northwest');
 
 nanmean(Losdischarge(ismember(year(dates),2019)))
 nanmean(Losdischarge(ismember(year(dates),2020)))

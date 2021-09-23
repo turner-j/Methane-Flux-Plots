@@ -368,12 +368,20 @@ plot(xFit,yFit,'-','Color',[ 0.4902    0.2588    0.4000],'LineWidth',2);
 [R,P] = corrcoef(x,y,'Rows','complete')
 hold off
 xlabel('T_{stream} (^{\circ} C)')
-ylabel('T_{air}-FCH_4')
+ylabel('T_{air} FCH_4')
 % title('T_{water} vs. T_{air}-FCH_4 US-ALQ Apr-Oct')
 xlim([0 25])
 ylim([-0.5 4.5])
 set(gca,'FontSize',17)
 title('US-ALQ')
+
+xl = xlim;
+yl = ylim;
+xt = 0.05 * (xl(2)-xl(1)) + xl(1)
+yt = 0.90 * (yl(2)-yl(1)) + yl(1)
+caption = sprintf('y = %.2f*x + %.2f',0.019,0.74);
+text(xt, yt, caption, 'FontSize', 16, 'Color', 'k');
+text(1,3,[{'R^2 = '} num2str(0.02,formatSpec)],'FontSize',16)
 
 subplot(1,2,2)
 hold on
@@ -391,5 +399,13 @@ xlim([0 5])
 ylim([-0.5 4.5])
 set(gca,'FontSize',17)
 xlabel('T_{stream} (^{\circ} C)')
-ylabel('T_{air}-FCH_4')
+ylabel('T_{air} FCH_4')
 title('US-ALQ')
+
+xl = xlim;
+yl = ylim;
+xt = 0.05 * (xl(2)-xl(1)) + xl(1)
+yt = 0.90 * (yl(2)-yl(1)) + yl(1)
+caption = sprintf('y = %.2f*x + %.2f',-0.12,1.0);
+text(xt, yt, caption, 'FontSize', 16, 'Color', 'k');
+text(0.2,3,[{'R^2 = '} num2str(0.08,formatSpec)],'FontSize',16)

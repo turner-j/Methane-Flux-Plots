@@ -81,17 +81,24 @@ set(hBar2,'CData',FCH4variance,'CDataMapping','scaled');
 c = colorbar;
 c.Label.String = 'Variance';
 caxis([min(FCH4variance) max(FCH4variance)]);
-%% Calculate Missing Data Each Month
-TF = 100*sum(isnan(USLos.FCH4_1_1_1)/length(USLos.FCH4_1_1_1))
-TF = 100*sum(isnan(USLos.FCH4_1_1_1(ismember(x,4:10))))/length(USLos.FCH4_1_1_1(ismember(x,4:10)))
-TF = 100*sum(isnan(USLos.FCH4_1_1_1(~ismember(x,4:10))))/length(USLos.FCH4_1_1_1(~ismember(x,4:10)))
-TF = 100*sum(isnan(USLos.FCH4_RF_filled)/length(USLos.FCH4_RF_filled))
+%% Calculate Missing Data
+missingNEE19 = sum(isnan(USLos.NEE(year(USLos.TIMESTAMP_END)==2019)));
+NEE19 = sum(~isnan(USLos.NEE_F(year(USLos.TIMESTAMP_END)==2019)));
+missingtotalNEE19 = (missingNEE19./length(USLos.NEE_F(year(USLos.TIMESTAMP_END)==2019)))*100;
+totalNEE19 = (NEE19./length(USLos.NEE_F(year(USLos.TIMESTAMP_END)==2019)))*100;
 
-x = month(USLos.TIMESTAMP_END(year(USLos.TIMESTAMP_END)==2019));
-missingNEE19 = accumarray(x,isnan(USLos.NEE_PI(year(USLos.TIMESTAMP_END)==2019)),[]);
-NEE19 = accumarray(x,~isnan(USLos.NEE_PI_F(year(USLos.TIMESTAMP_END)==2019)),[]);
-missingtotalNEE19 = (missingNEE19./length(USLos.NEE_PI))*100;
+missingNEE20 = sum(isnan(USLos.NEE(year(USLos.TIMESTAMP_END)==2020)));
+NEE20 = sum(~isnan(USLos.NEE_F(year(USLos.TIMESTAMP_END)==2020)));
+missingtotalNEE20 = (missingNEE20./length(USLos.NEE_F(year(USLos.TIMESTAMP_END)==2020)))*100;
+totalNEE20 = (NEE20./length(USLos.NEE_F(year(USLos.TIMESTAMP_END)==2020)))*100;
 
+mo = month(USLos.TIMESTAMP_END);
+missingNEE = sum(isnan(USLos.NEE(ismember(mo,4:10))));
+missingtotalNEEseason = (missingNEE./length(USLos.NEE_F(ismember(mo,4:10))))*100;
+
+missingNEE = sum(isnan(USLos.NEE(~ismember(mo,4:10))));
+missingtotalNEEoffseason  = (missingNEE./length(USLos.NEE_F(~ismember(mo,4:10))))*100;
+%%
 missingFCH419 = accumarray(x,isnan(USLos.FCH4_1_1_1(year(USLos.TIMESTAMP_END)==2019)),[]);
 monthlyFCH419 = accumarray(x,~isnan(USLos.FCH4_1_1_1(year(USLos.TIMESTAMP_END)==2019)),[]);
 missingtotalFCH419 = (missingFCH419./monthlyFCH419)*100;
@@ -108,8 +115,3 @@ missingFCH420 = accumarray(x2,isnan(USLos.FCH4_1_1_1(year(USLos.TIMESTAMP_END)==
 monthlyFCH420 = accumarray(x2,~isnan(USLos.FCH4_1_1_1(year(USLos.TIMESTAMP_END)==2020)),[]);
 missingtotalFCH420 = (missingFCH420./monthlyFCH420)*100;
 TF = 100*sum(isnan(USLos.FCH4_1_1_1(year(USLos.TIMESTAMP_END)==2020))/length(USLos.FCH4_1_1_1(year(USLos.TIMESTAMP_END)==2020)))
-
-yr2 = 2020*ones(length(unique(x2)),1);
-
-T = table([yr;yr2], [unique(x);unique(x2)] ,[missingtotalNEE19;missingtotalNEE20] ,[missingtotalFCH419;missingtotalFCH420]);
-T.Properties.VariableNames = {'Year','Month','Missing NEE','Missing FCH4'};
